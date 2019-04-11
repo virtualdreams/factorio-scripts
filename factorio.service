@@ -1,0 +1,14 @@
+[Unit]
+Description=Factorio Server
+After=network.target
+
+[Service]
+Type=simple
+User=factorio
+Group=factorio
+WorkingDirectory=/opt/factorio/
+ExecStart=/opt/factorio/bin/x64/factorio --start-server /home/factorio/saves/map.zip --server-settings /home/factorio/server-settings.json --rcon-port 25575 --rcon-password "your-rcon-password"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

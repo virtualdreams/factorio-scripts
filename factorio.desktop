@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Factorio
+Icon=/home/user/Dokumente/Diverses/factorio/data/core/graphics/factorio.icns
+Exec=/home/user/Dokumente/Diverses/factorio/bin/x64/factorio
+Type=Application
+Categories=Games
+Terminal=false

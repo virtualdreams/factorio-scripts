@@ -17,7 +17,7 @@ parser.add_argument('-t', '--token',
 parser.add_argument('-p', '--package', default='core-linux_headless64',
                     dest='package', help='Factorio package.')
 parser.add_argument('-o', '--output', default='/tmp/',
-                    dest='output', help='Using the chosen binary.')
+                    dest='output', help='Download directory.')
 parser.add_argument('-l', '--list-packages', action='store_true',
                     dest='list_packages', help='List packages.')
 parser.add_argument('-L', '--list-updates', action='store_true',

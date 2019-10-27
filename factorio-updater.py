@@ -102,10 +102,19 @@ def FetchUpdate(url, path, package, vfrom, vto):
         path, '{}-{}-{}-update.zip'.format(package, vfrom, vto))
 
     r = requests.get(url, stream=True)
+    cl = r.headers.get('content-length')
+
     with open(fpath, 'wb') as fd:
+        dl = 0
+        tl = int(cl)
         for chunk in r.iter_content(8192):
+            dl += len(chunk)
+
+            print('\r  Download: [{:>3}%]'.format(int(dl*100/tl)), end='')
+
             fd.write(chunk)
 
+    print()
     return fpath
 
 

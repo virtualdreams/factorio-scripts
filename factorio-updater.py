@@ -6,6 +6,7 @@ import os
 import argparse
 import requests
 import subprocess
+import time
 
 parser = argparse.ArgumentParser(description='Fetches factorio updates')
 parser.add_argument('-b', '--binary', required=True,
@@ -104,13 +105,16 @@ def FetchUpdate(url, path, package, vfrom, vto):
     r = requests.get(url, stream=True)
     cl = r.headers.get('content-length')
 
+    start = time.perf_counter()
+
     with open(fpath, 'wb') as fd:
         dl = 0
         tl = int(cl)
         for chunk in r.iter_content(8192):
             dl += len(chunk)
 
-            print('\r  Download: [{:>3}%]'.format(int(dl*100/tl)), end='')
+            print('\r  Download: [{:>3}%] {:6.1f} Mb/s'.format(
+                int(dl*100/tl), (dl//(time.perf_counter() - start))/1000/1000), end='')
 
             fd.write(chunk)
 

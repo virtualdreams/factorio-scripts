@@ -113,7 +113,7 @@ def FetchUpdate(url, path, package, vfrom, vto):
         for chunk in r.iter_content(8192):
             dl += len(chunk)
 
-            print('\r  Download: [{:>3}%] {:6.1f} Mb/s'.format(
+            print('\r  Download: [{:>3}%] {:6.1f} MB/s'.format(
                 int(dl*100/tl), (dl//(time.perf_counter() - start))/1000/1000), end='')
 
             fd.write(chunk)

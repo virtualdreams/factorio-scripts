@@ -8,29 +8,33 @@ import requests
 import subprocess
 import time
 
-parser = argparse.ArgumentParser(description='Fetches factorio updates')
-parser.add_argument('-b', '--binary', required=True,
-                    dest='binary', help='Factorio binary.')
-parser.add_argument('-u', '--user',
-                    dest='user', help='Factorio username.')
-parser.add_argument('-t', '--token',
-                    dest='token', help='Factorio token.')
-parser.add_argument('-p', '--package', default='core-linux_headless64',
-                    dest='package', help='Factorio package.')
-parser.add_argument('-o', '--output', default='/tmp/',
-                    dest='output', help='Download directory.')
-parser.add_argument('-l', '--list-packages', action='store_true',
-                    dest='list_packages', help='List packages.')
-parser.add_argument('-L', '--list-updates', action='store_true',
-                    dest='list_updates', help='List updates.')
-parser.add_argument('-f', '--from-version',
-                    dest='from_version', help='Get updates from specified version.')
-parser.add_argument('-x', '--experimental', action='store_true',
-                    dest='experimental', help='Get experimental versions.')
-parser.add_argument('-a', '--apply', action='store_true',
-                    dest='apply', help='Apply update after download.')
-parser.add_argument('-d', '--delete', action='store_true',
-                    dest='delete', help='Delete update after apply.')
+
+def ParseArguments():
+    parser = argparse.ArgumentParser(description='Fetches factorio updates')
+    parser.add_argument('-b', '--binary', required=True,
+                        dest='binary', help='Factorio binary.')
+    parser.add_argument('-u', '--user',
+                        dest='user', help='Factorio username.')
+    parser.add_argument('-t', '--token',
+                        dest='token', help='Factorio token.')
+    parser.add_argument('-p', '--package', default='core-linux_headless64',
+                        dest='package', help='Factorio package.')
+    parser.add_argument('-o', '--output', default='/tmp/',
+                        dest='output', help='Download directory.')
+    parser.add_argument('-l', '--list-packages', action='store_true',
+                        dest='list_packages', help='List packages.')
+    parser.add_argument('-L', '--list-updates', action='store_true',
+                        dest='list_updates', help='List updates.')
+    parser.add_argument('-f', '--from-version',
+                        dest='from_version', help='Get updates from specified version.')
+    parser.add_argument('-x', '--experimental', action='store_true',
+                        dest='experimental', help='Get experimental versions.')
+    parser.add_argument('-a', '--apply', action='store_true',
+                        dest='apply', help='Apply update after download.')
+    parser.add_argument('-d', '--delete', action='store_true',
+                        dest='delete', help='Delete update after apply.')
+
+    return parser.parse_args()
 
 
 class Error(Exception):
@@ -149,7 +153,7 @@ def GetVersion(binary):
 
 
 def main():
-    args = parser.parse_args()
+    args = ParseArguments()
 
     if args.from_version is not None:
         version = args.from_version

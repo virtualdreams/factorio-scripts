@@ -9,7 +9,7 @@ import subprocess
 import time
 
 
-def ParseArguments():
+def parse_arguments():
     parser = argparse.ArgumentParser(description='Fetches factorio updates')
     parser.add_argument('-b', '--binary', required=True,
                         dest='binary', help='Factorio binary.')
@@ -41,17 +41,17 @@ class Error(Exception):
     pass
 
 
-def VersionKey(v):
+def version_key(v):
     if v is None:
         return []
     return [int(x) for x in v.split(".")]
 
 
-def DictVersionKey(v):
+def dict_version_key(v):
     return [int(x) for x in v[0].split('.')]
 
 
-def GetAvailableVersions(username, token):
+def get_available_versions(username, token):
     """Get the list of available versions.
     """
     payload = {'username': username, 'token': token}
@@ -64,7 +64,7 @@ def GetAvailableVersions(username, token):
     return r.json()
 
 
-def GetUpdates(json, package, vfrom, experimental):
+def get_updates(json, package, vfrom, experimental):
     """Get a list of updates.
     """
     latest = None
@@ -75,19 +75,19 @@ def GetUpdates(json, package, vfrom, experimental):
                 latest = row['stable']
         else:
             if 'from' in row:
-                latest = max(latest, row['to'], key=VersionKey)
+                latest = max(latest, row['to'], key=version_key)
 
     for row in json[package]:
-        if 'from' in row and max(row['from'], vfrom, key=VersionKey) == row['from']:
-            if not experimental and min(row['to'], latest, key=VersionKey) == row['to']:
+        if 'from' in row and max(row['from'], vfrom, key=version_key) == row['from']:
+            if not experimental and min(row['to'], latest, key=version_key) == row['to']:
                 available[row['from']] = row['to']
             elif experimental:
                 available[row['from']] = row['to']
 
-    return latest, sorted(available.items(), key=DictVersionKey)
+    return latest, sorted(available.items(), key=dict_version_key)
 
 
-def GetDownloadLink(username, token, package, vfrom, vto):
+def get_download_link(username, token, package, vfrom, vto):
     """Get the download link for the update
     """
     payload = {'username': username, 'token': token,
@@ -100,7 +100,7 @@ def GetDownloadLink(username, token, package, vfrom, vto):
     return r.json()[0]
 
 
-def FetchUpdate(url, path, package, vfrom, vto):
+def fetch_update(url, path, package, vfrom, vto):
     """Fetch the update from server and store it.
     """
     fpath = os.path.join(
@@ -126,7 +126,7 @@ def FetchUpdate(url, path, package, vfrom, vto):
     return fpath
 
 
-def ApplyUpdate(binary, path):
+def apply_update(binary, path):
     """ Apply update
     """
     try:
@@ -137,11 +137,11 @@ def ApplyUpdate(binary, path):
         sys.exit(1)
 
 
-def DeleteUpdate(path):
+def delete_update(path):
     os.remove(path)
 
 
-def GetVersion(binary):
+def get_version(binary):
     """ Get version number from binary
     """
     sp_output = subprocess.check_output(
@@ -153,16 +153,16 @@ def GetVersion(binary):
 
 
 def main():
-    args = ParseArguments()
+    args = parse_arguments()
 
     if args.from_version is not None:
         version = args.from_version
         print('Version from command line {}.'.format(version))
     else:
-        version = GetVersion(args.binary)
+        version = get_version(args.binary)
         print('Version {} auto-detected.'.format(version))
 
-    versions = GetAvailableVersions(args.user, args.token)
+    versions = get_available_versions(args.user, args.token)
     if args.list_packages:
         print('Available packages:')
         for package in versions.keys():
@@ -175,7 +175,7 @@ def main():
 
     print('Get updates for package:', args.package)
 
-    latest, updates = GetUpdates(
+    latest, updates = get_updates(
         versions, args.package, version, args.experimental)
     print('Latest version:', latest)
     for vfrom, vto in updates:
@@ -183,16 +183,16 @@ def main():
             print('Update available: {} -> {}.'.format(vfrom, vto))
         else:
             print('Get update: {} -> {}.'.format(vfrom, vto))
-            url = GetDownloadLink(args.user, args.token, args.package,
-                                  vfrom, vto)
-            path = FetchUpdate(url, args.output, args.package, vfrom, vto)
+            url = get_download_link(args.user, args.token, args.package,
+                                    vfrom, vto)
+            path = fetch_update(url, args.output, args.package, vfrom, vto)
             print('  Stored to', path)
             if args.from_version is None and args.apply:
                 print('  Apply update {} -> {}.'.format(vfrom, vto))
-                ApplyUpdate(args.binary, path)
+                apply_update(args.binary, path)
                 if args.delete:
                     print('  Delete update {} -> {}.'.format(vfrom, vto))
-                    DeleteUpdate(path)
+                    delete_update(path)
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ import subprocess
 import time
 
 
-def parse_arguments():
+def parse_args():
     parser = argparse.ArgumentParser(description='Fetches factorio updates')
     parser.add_argument('-b', '--binary', required=True,
                         dest='binary', help='Factorio binary.')
@@ -54,7 +54,11 @@ def dict_version_key(v):
 def get_available_versions(username, token):
     """Get the list of available versions.
     """
-    payload = {'username': username, 'token': token}
+    payload = {
+        'username': username,
+        'token': token
+    }
+
     r = requests.get(
         'https://updater.factorio.com/get-available-versions', params=payload)
     if r.status_code != 200:
@@ -90,8 +94,14 @@ def get_updates(json, package, vfrom, experimental):
 def get_download_link(username, token, package, vfrom, vto):
     """Get the download link for the update
     """
-    payload = {'username': username, 'token': token,
-               'package': package, 'from': vfrom, 'to': vto}
+    payload = {
+        'username': username,
+        'token': token,
+        'package': package,
+        'from': vfrom,
+        'to': vto
+    }
+
     r = requests.get(
         'https://updater.factorio.com/get-download-link', params=payload)
     if r.status_code != 200:
@@ -153,7 +163,7 @@ def get_version(binary):
 
 
 def main():
-    args = parse_arguments()
+    args = parse_args()
 
     if args.from_version is not None:
         version = args.from_version

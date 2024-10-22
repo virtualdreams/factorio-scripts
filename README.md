@@ -1,3 +1,19 @@
+# Update
+
+Update installation to latest experimental version.
+
+```sh
+./factorio-updater.py -u USERNAME -t TOKEN -b /path/to/factorio -p PACKAGE -a -d -x
+```
+
+* `-u`: Username (optional for headless server)
+* `-t`: Token (optional for headless server)
+* `-p`: Package name (optional for list packages)
+* `-l`: List all available packages
+* `-a`: Apply update
+* `-d`: Delete update
+* `-x`: Use experminal version
+
 # Factorio Server (Debian)
 
 Create a factorio user.
